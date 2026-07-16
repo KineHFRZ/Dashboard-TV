@@ -9,6 +9,10 @@ let chartDiasPromedio = null;
 
 // Orden cronológico de meses
 const ORDER_MESES = [
+    'JULIO 2025',
+    'AGOSTO 2025',
+    'SEPTIEMBRE 2025',
+    'OCTUBRE 2025',
     'NOVIEMBRE 2025',
     'DICIEMBRE 2025',
     'ENERO 2026',
@@ -17,10 +21,7 @@ const ORDER_MESES = [
     'ABRIL 2026',
     'MAYO 2026',
     'JUNIO 2026',
-    'JULIO 2026',
-    'AGOSTO 2026',
-    'SEPTIEMBRE 2026',
-    'OCTUBRE 2026'
+    'JULIO 2026'
 ];
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -151,6 +152,8 @@ function updateDashboard() {
 
 function updateKPIs() {
     const total = filteredData.length;
+    
+    // === MEDIA CONDICIONAL PARA EDAD (solo valores > 0 y < 120) ===
     const edades = filteredData.map(d => d.edad).filter(e => e > 0 && e < 120);
     const edadProm = edades.length > 0 ? Math.round(edades.reduce((a, b) => a + b, 0) / edades.length) : 0;
     
@@ -165,7 +168,7 @@ function updateKPIs() {
     const femenino = filteredData.filter(d => d.sexo === 'FEMENINO').length;
 
     document.getElementById('kpiTotal').textContent = total;
-    document.getElementById('kpiEdad').textContent = edadProm;
+    document.getElementById('kpiEdad').textContent = edadProm + (edades.length > 0 ? ' (n=' + edades.length + ')' : '');
     document.getElementById('kpiVNI').textContent = vniProm + (vniData.length > 0 ? ' (n=' + vniData.length + ')' : '');
     document.getElementById('kpiCNAF').textContent = cnafProm + (cnafData.length > 0 ? ' (n=' + cnafData.length + ')' : '');
     document.getElementById('kpiMasculino').textContent = masculino;
@@ -260,7 +263,7 @@ function updateCharts() {
         }
     });
 
-    // 4. Distribución de Edades (Histograma)
+    // 4. Distribución de Edades (Histograma) - SOLO EDADES > 0
     const edades = filteredData.map(d => d.edad).filter(e => e > 0 && e < 120);
     const bins = [0, 18, 30, 40, 50, 60, 70, 80, 90, 100];
     const labels = ['0-17', '18-29', '30-39', '40-49', '50-59', '60-69', '70-79', '80-89', '90-100'];
