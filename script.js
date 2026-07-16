@@ -7,6 +7,22 @@ let chartMotivos = null;
 let chartEdades = null;
 let chartDiasPromedio = null;
 
+// Orden cronológico de meses
+const ORDER_MESES = [
+    'NOVIEMBRE 2025',
+    'DICIEMBRE 2025',
+    'ENERO 2026',
+    'FEBRERO 2026',
+    'MARZO 2026',
+    'ABRIL 2026',
+    'MAYO 2026',
+    'JUNIO 2026',
+    'JULIO 2026',
+    'AGOSTO 2026',
+    'SEPTIEMBRE 2026',
+    'OCTUBRE 2026'
+];
+
 document.addEventListener('DOMContentLoaded', function() {
     if (typeof data === 'undefined') {
         document.body.innerHTML = '<h1 style="color:red;text-align:center;padding:50px;">❌ Error: No se encontraron datos</h1>';
@@ -22,8 +38,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function populateFilters() {
-    // Meses
-    const meses = [...new Set(allData.map(d => d.mes))].sort();
+    // Meses (ordenados cronológicamente)
+    const meses = [...new Set(allData.map(d => d.mes))].sort((a, b) => {
+        return ORDER_MESES.indexOf(a) - ORDER_MESES.indexOf(b);
+    });
     const mesContainer = document.getElementById('mesCheckboxes');
     mesContainer.innerHTML = '';
     meses.forEach(mes => {
@@ -135,15 +153,21 @@ function updateKPIs() {
     const total = filteredData.length;
     const edades = filteredData.map(d => d.edad).filter(e => e > 0 && e < 120);
     const edadProm = edades.length > 0 ? Math.round(edades.reduce((a, b) => a + b, 0) / edades.length) : 0;
-    const vniProm = filteredData.length > 0 ? Math.round(filteredData.reduce((a, b) => a + b.diasVNI, 0) / filteredData.length) : 0;
-    const cnafProm = filteredData.length > 0 ? Math.round(filteredData.reduce((a, b) => a + b.diasCNAF, 0) / filteredData.length) : 0;
+    
+    // === MEDIA CONDICIONAL: Solo considerar casos > 0 ===
+    const vniData = filteredData.filter(d => d.diasVNI > 0);
+    const vniProm = vniData.length > 0 ? Math.round(vniData.reduce((a, b) => a + b.diasVNI, 0) / vniData.length) : 0;
+    
+    const cnafData = filteredData.filter(d => d.diasCNAF > 0);
+    const cnafProm = cnafData.length > 0 ? Math.round(cnafData.reduce((a, b) => a + b.diasCNAF, 0) / cnafData.length) : 0;
+    
     const masculino = filteredData.filter(d => d.sexo === 'MASCULINO').length;
     const femenino = filteredData.filter(d => d.sexo === 'FEMENINO').length;
 
     document.getElementById('kpiTotal').textContent = total;
     document.getElementById('kpiEdad').textContent = edadProm;
-    document.getElementById('kpiVNI').textContent = vniProm;
-    document.getElementById('kpiCNAF').textContent = cnafProm;
+    document.getElementById('kpiVNI').textContent = vniProm + (vniData.length > 0 ? ' (n=' + vniData.length + ')' : '');
+    document.getElementById('kpiCNAF').textContent = cnafProm + (cnafData.length > 0 ? ' (n=' + cnafData.length + ')' : '');
     document.getElementById('kpiMasculino').textContent = masculino;
     document.getElementById('kpiFemenino').textContent = femenino;
 }
@@ -156,8 +180,11 @@ function updateCharts() {
     if (chartEdades) { chartEdades.destroy(); chartEdades = null; }
     if (chartDiasPromedio) { chartDiasPromedio.destroy(); chartDiasPromedio = null; }
 
-    // 1. Pacientes por Mes
-    const meses = [...new Set(filteredData.map(d => d.mes))].sort();
+    // Obtener meses disponibles y ordenarlos cronológicamente
+    const mesesDisponibles = [...new Set(filteredData.map(d => d.mes))];
+    const meses = ORDER_MESES.filter(m => mesesDisponibles.includes(m));
+
+    // 1. Pacientes por Mes (ordenado cronológicamente)
     const pacientesPorMes = meses.map(mes => filteredData.filter(d => d.mes === mes).length);
 
     chartPacientesMes = new Chart(document.getElementById('chartPacientesMes'), {
@@ -262,14 +289,24 @@ function updateCharts() {
         }
     });
 
-    // 5. Promedio de Días VNI y CNAF por Mes
+    // 5. Promedio de Días VNI y CNAF por Mes (MEDIA CONDICIONAL)
     const vniPorMes = meses.map(mes => {
-        const dataMes = filteredData.filter(d => d.mes === mes);
+        const dataMes = filteredData.filter(d => d.mes === mes && d.diasVNI > 0);
         return dataMes.length > 0 ? Math.round(dataMes.reduce((a, b) => a + b.diasVNI, 0) / dataMes.length) : 0;
     });
+    
     const cnafPorMes = meses.map(mes => {
-        const dataMes = filteredData.filter(d => d.mes === mes);
+        const dataMes = filteredData.filter(d => d.mes === mes && d.diasCNAF > 0);
         return dataMes.length > 0 ? Math.round(dataMes.reduce((a, b) => a + b.diasCNAF, 0) / dataMes.length) : 0;
+    });
+
+    // Contar cuántos casos > 0 por mes para mostrar en tooltip
+    const vniCountPorMes = meses.map(mes => {
+        return filteredData.filter(d => d.mes === mes && d.diasVNI > 0).length;
+    });
+    
+    const cnafCountPorMes = meses.map(mes => {
+        return filteredData.filter(d => d.mes === mes && d.diasCNAF > 0).length;
     });
 
     chartDiasPromedio = new Chart(document.getElementById('chartDiasPromedio'), {
@@ -298,7 +335,20 @@ function updateCharts() {
         options: {
             responsive: true,
             maintainAspectRatio: true,
-            plugins: { legend: { position: 'top' } },
+            plugins: { 
+                legend: { position: 'top' },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const index = context.dataIndex;
+                            const label = context.dataset.label || '';
+                            const value = context.parsed.y;
+                            const count = label.includes('VNI') ? vniCountPorMes[index] : cnafCountPorMes[index];
+                            return label + ': ' + value + ' días (n=' + count + ')';
+                        }
+                    }
+                }
+            },
             scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
         }
     });
@@ -313,10 +363,19 @@ function updateTable() {
         return;
     }
 
-    filteredData.slice(0, 100).forEach(d => {
+    // Ordenar por mes (cronológico) y luego por edad
+    const sortedData = [...filteredData].sort((a, b) => {
+        const mesA = ORDER_MESES.indexOf(a.mes);
+        const mesB = ORDER_MESES.indexOf(b.mes);
+        if (mesA !== mesB) return mesA - mesB;
+        return a.edad - b.edad;
+    });
+
+    sortedData.slice(0, 100).forEach(d => {
         const tr = document.createElement('tr');
+        const mesShort = d.mes.split(' ')[0].toLowerCase();
         tr.innerHTML = `
-            <td><span class="badge badge-${d.mes.split(' ')[0].toLowerCase()}">${d.mes}</span></td>
+            <td><span class="badge badge-${mesShort}">${d.mes}</span></td>
             <td>${d.edad}</td>
             <td>${d.sexo}</td>
             <td>${d.motivo}</td>
