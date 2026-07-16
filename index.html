@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Ventilación Mecánica y CNAF</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- HEADER -->
+        <header class="header">
+            <h1>🫁 Dashboard Ventilación Mecánica y CNAF</h1>
+            <p>Consolidado: NOVIEMBRE 2025 - JULIO 2026</p>
+        </header>
+
+        <!-- FILTROS -->
+        <section class="filters">
+            <div class="filter-group filter-multiple">
+                <label>📅 Meses:</label>
+                <div class="checkbox-group" id="mesCheckboxes"></div>
+                <div class="checkbox-actions">
+                    <button class="btn-small" id="selectAllMeses">✅ Todos</button>
+                    <button class="btn-small" id="deselectAllMeses">❌ Ninguno</button>
+                </div>
+            </div>
+
+            <div class="filter-group filter-multiple">
+                <label>⚥ Sexo:</label>
+                <div class="checkbox-group" id="sexoCheckboxes"></div>
+                <div class="checkbox-actions">
+                    <button class="btn-small" id="selectAllSexos">✅ Todos</button>
+                    <button class="btn-small" id="deselectAllSexos">❌ Ninguno</button>
+                </div>
+            </div>
+
+            <div class="filter-group filter-multiple">
+                <label>📋 Motivo de Conexión:</label>
+                <div class="checkbox-group" id="motivoCheckboxes"></div>
+                <div class="checkbox-actions">
+                    <button class="btn-small" id="selectAllMotivos">✅ Todos</button>
+                    <button class="btn-small" id="deselectAllMotivos">❌ Ninguno</button>
+                </div>
+            </div>
+
+            <button id="resetFilters">🔄 Resetear Filtros</button>
+        </section>
+
+        <!-- KPIs -->
+        <section class="kpi-grid">
+            <div class="kpi-card"><h3>Total Pacientes</h3><p id="kpiTotal">0</p></div>
+            <div class="kpi-card"><h3>Edad Promedio</h3><p id="kpiEdad">0</p></div>
+            <div class="kpi-card"><h3>Prom. Días VNI</h3><p id="kpiVNI">0</p></div>
+            <div class="kpi-card"><h3>Prom. Días CNAF</h3><p id="kpiCNAF">0</p></div>
+            <div class="kpi-card"><h3>Masculino</h3><p id="kpiMasculino">0</p></div>
+            <div class="kpi-card"><h3>Femenino</h3><p id="kpiFemenino">0</p></div>
+        </section>
+
+        <!-- GRÁFICOS -->
+        <section class="charts-grid">
+            <div class="chart-card">
+                <h2>📈 Pacientes por Mes</h2>
+                <canvas id="chartPacientesMes"></canvas>
+            </div>
+            <div class="chart-card">
+                <h2>📊 Distribución por Sexo</h2>
+                <canvas id="chartSexo"></canvas>
+            </div>
+            <div class="chart-card">
+                <h2>📊 Motivos de Conexión</h2>
+                <canvas id="chartMotivos"></canvas>
+            </div>
+            <div class="chart-card">
+                <h2>📊 Distribución de Edades</h2>
+                <canvas id="chartEdades"></canvas>
+            </div>
+            <div class="chart-card full-width">
+                <h2>📈 Promedio de Días VNI y CNAF por Mes</h2>
+                <canvas id="chartDiasPromedio"></canvas>
+            </div>
+        </section>
+
+        <!-- TABLA -->
+        <section class="table-section">
+            <h2>📋 Detalle de Pacientes</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mes</th>
+                            <th>Edad</th>
+                            <th>Sexo</th>
+                            <th>Motivo de Conexión</th>
+                            <th>Días VNI</th>
+                            <th>Días CNAF</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
