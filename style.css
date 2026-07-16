@@ -306,7 +306,10 @@ tbody tr:nth-child(even):hover {
     font-weight: 600;
     color: white;
 }
-
+.badge-julio { background: #fc8181; }
+.badge-agosto { background: #f6ad55; }
+.badge-septiembre { background: #68d391; }
+.badge-octubre { background: #9f7aea; }
 .badge-noviembre { background: #9f7aea; }
 .badge-diciembre { background: #4299e1; }
 .badge-enero { background: #f6ad55; }
@@ -315,6 +318,7 @@ tbody tr:nth-child(even):hover {
 .badge-mayo { background: #f6ad55; }
 .badge-junio { background: #68d391; }
 .badge-julio { background: #fc8181; }
+
 
 /* ============================================
    CONTENEDOR DE TORTAS MÚLTIPLES
