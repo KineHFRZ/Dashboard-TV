@@ -549,3 +549,94 @@ tbody tr:nth-child(even):hover {
         max-height: 120px !important;
     }
 }
+/* ============================================
+   NUEVOS ESTILOS PARA MÉTRICAS PROBABILÍSTICAS
+   ============================================ */
+
+/* Badges para los nuevos meses */
+.badge-julio { background: #fc8181; }
+.badge-agosto { background: #f6ad55; }
+.badge-septiembre { background: #68d391; }
+.badge-octubre { background: #9f7aea; }
+
+/* Badge genérico para meses que no tengan estilo específico */
+.badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.7em;
+    font-weight: 600;
+    color: white;
+}
+
+/* Ajustes para KPIs con múltiples líneas */
+.kpi-card p {
+    font-size: 1.4em;
+    font-weight: 700;
+    color: #2d3748;
+    line-height: 1.5;
+    min-height: 70px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.kpi-card {
+    min-height: 100px;
+}
+
+/* Estilos para los nuevos gráficos */
+#chartTendenciaPercentiles {
+    max-height: 300px;
+    max-width: 100%;
+}
+
+#chartBoxplot {
+    max-height: 350px;
+    max-width: 100%;
+}
+
+#chartProporcionUso {
+    max-height: 280px;
+    max-width: 100%;
+}
+
+/* Ajustes responsive para nuevos gráficos */
+@media (max-width: 768px) {
+    #chartTendenciaPercentiles {
+        max-height: 250px;
+    }
+    
+    #chartBoxplot {
+        max-height: 280px;
+    }
+    
+    #chartProporcionUso {
+        max-height: 220px;
+    }
+    
+    .kpi-card p {
+        font-size: 1.1em;
+        min-height: 60px;
+    }
+}
+
+@media (max-width: 480px) {
+    #chartTendenciaPercentiles {
+        max-height: 200px;
+    }
+    
+    #chartBoxplot {
+        max-height: 220px;
+    }
+    
+    #chartProporcionUso {
+        max-height: 180px;
+    }
+    
+    .kpi-card p {
+        font-size: 0.9em;
+        min-height: 50px;
+    }
+}
