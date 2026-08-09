@@ -12,7 +12,7 @@
         <!-- HEADER -->
         <header class="header">
             <h1>🫁 Dashboard Ventilación Mecánica y CNAF</h1>
-            <p>Consolidado: NOVIEMBRE 2025 - JULIO 2026</p>
+            <p>Consolidado: JULIO 2025 - JULIO 2026</p>
         </header>
 
         <!-- FILTROS -->
@@ -51,10 +51,10 @@
         <section class="kpi-grid">
             <div class="kpi-card"><h3>Total Pacientes</h3><p id="kpiTotal">0</p></div>
             <div class="kpi-card"><h3>Edad Promedio</h3><p id="kpiEdad">0</p></div>
-            <div class="kpi-card"><h3>Prom. Días VNI</h3><p id="kpiVNI">0</p></div>
-            <div class="kpi-card"><h3>Prom. Días CNAF</h3><p id="kpiCNAF">0</p></div>
-            <div class="kpi-card"><h3>Masculino</h3><p id="kpiMasculino">0</p></div>
-            <div class="kpi-card"><h3>Femenino</h3><p id="kpiFemenino">0</p></div>
+            <div class="kpi-card"><h3>📊 VNI</h3><p id="kpiVNI">-</p></div>
+            <div class="kpi-card"><h3>📊 CNAF</h3><p id="kpiCNAF">-</p></div>
+            <div class="kpi-card"><h3>⚥ Masculino</h3><p id="kpiMasculino">0</p></div>
+            <div class="kpi-card"><h3>⚥ Femenino</h3><p id="kpiFemenino">0</p></div>
         </section>
 
         <!-- GRÁFICOS -->
@@ -76,8 +76,18 @@
                 <canvas id="chartEdades"></canvas>
             </div>
             <div class="chart-card full-width">
-                <h2>📈 Promedio de Días VNI y CNAF por Mes</h2>
-                <canvas id="chartDiasPromedio"></canvas>
+                <h2>📈 Tendencia de Mediana VNI y CNAF por Mes</h2>
+                <p>💡 Línea superior = Percentil 75 | Línea inferior = Percentil 25</p>
+                <canvas id="chartTendenciaPercentiles"></canvas>
+            </div>
+            <div class="chart-card full-width">
+                <h2>📊 Distribución de Días VNI y CNAF (Boxplot)</h2>
+                <p>💡 Cada barra muestra: Mínimo, P25, Mediana, P75, Máximo</p>
+                <canvas id="chartBoxplot"></canvas>
+            </div>
+            <div class="chart-card full-width">
+                <h2>📊 Proporción de Pacientes con VNI y CNAF</h2>
+                <canvas id="chartProporcionUso"></canvas>
             </div>
         </section>
 
