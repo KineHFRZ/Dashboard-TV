@@ -640,3 +640,17 @@ tbody tr:nth-child(even):hover {
         min-height: 50px;
     }
 }
+/* Badges para los nuevos meses */
+.badge-agosto { background: #f6ad55; }
+.badge-septiembre { background: #68d391; }
+
+/* Badge para motivos nuevos */
+.badge-motivo {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-size: 0.65em;
+    background: #edf2f7;
+    color: #4a5568;
+    font-weight: 500;
+}
