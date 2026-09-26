@@ -23,7 +23,9 @@ const ORDER_MESES = [
     'ABRIL 2026',
     'MAYO 2026',
     'JUNIO 2026',
-    'JULIO 2026'
+    'JULIO 2026',
+    'AGOSTO 2026',
+    'SEPTIEMBRE 2026'
 ];
 
 document.addEventListener('DOMContentLoaded', function() {
